@@ -14,6 +14,11 @@ var (
 
 // main function - keep less than 10 lines of code
 func main() {
+	gui()
+	// cfg()
+}
+
+func cfg() {
 	// make SIL file
 	s := sil.Make("CFG", loc.CFG{})
 
