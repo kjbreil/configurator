@@ -10,5 +10,5 @@ type Key struct {
 }
 
 func (k *Key) String() string {
-	return fmt.Sprintf("%s[%s}%s", k.filename, k.section, k.key)
+	return fmt.Sprintf("%s[%s]%s", k.filename, k.section, k.key)
 }
