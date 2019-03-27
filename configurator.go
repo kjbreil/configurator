@@ -1,9 +1,14 @@
 package main
 
+import "log"
+
 var (
 	filename = "samples/System.ini"
 )
 
 func main() {
-	gui()
+	err := gui()
+	if err != nil {
+		log.Panicf("caught error: %v", err)
+	}
 }

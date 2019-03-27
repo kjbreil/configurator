@@ -11,7 +11,7 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-func gui() {
+func gui() (err error) {
 	// declare the CFG table type
 	cfg := loc.CFG{
 		F1000: "999901",
@@ -24,18 +24,34 @@ func gui() {
 		F1264: sil.JulianNow(),
 	}
 
-	cfg.F1056, _ = target()
-	cfg.F2846, _ = terminalGroup()
-
-	inf, _ := iniFile()
+	cfg.F1056, err = target()
+	if err != nil {
+		return err
+	}
+	cfg.F2846, err = terminalGroup()
+	if err != nil {
+		return err
+	}
+	inf, err := iniFile()
+	if err != nil {
+		return err
+	}
 
 	section, s := iniSection(inf, cfg)
-	fmt.Println("CFG_" + filename + section + ".sil")
+	// set file base, this includes extentions but not full path, set to upper
+	// case
+	fb := strings.ToUpper(path.Base(filename))
+	// just the file name without extention
+	f := strings.TrimSuffix(fb, path.Ext(fb))
 
-	f := path.Base(filename)
-	f = strings.ToUpper(strings.TrimSuffix(f, path.Ext(f)))
+	// set the batch # to the julian date, this "should" prevent collision
+	s.Header.F902 = fmt.Sprintf("9%07v", sil.JulianNow())
+	// #nosec
+	s.Header.F913 = fmt.Sprintf("CONFIGURATOR UPDATE FOR %s %s", fb, section)
 
-	s.Write("CFG_" + f + "_" + section + ".sil")
+	// Write the SIL file useing the filename and section
+	err = s.Write("CFG_" + f + "_" + section + ".sil")
+	return err
 }
 
 // make a SIL file from a section of the file
@@ -57,8 +73,6 @@ func iniSection(inf *ini.File, cfg loc.CFG) (string, sil.SIL) {
 	}
 
 	s := sil.Make("CFG", loc.CFG{})
-
-	s.Header.F902 = "000002"
 
 	if result == "ALL" {
 		for _, sec := range sections[1:] {
