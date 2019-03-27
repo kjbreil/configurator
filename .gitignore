@@ -15,3 +15,6 @@ out.sil
 *.sublime-workspace
 **.DS_Store
 configurator
+samples/**
+
+*.sil
