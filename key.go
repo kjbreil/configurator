@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"path"
+	"strings"
+)
 
 // Key is the data making F2845
 type Key struct {
@@ -10,5 +14,6 @@ type Key struct {
 }
 
 func (k *Key) String() string {
-	return fmt.Sprintf("%s[%s]%s", k.filename, k.section, k.key)
+	justFile := strings.ToUpper(path.Base(k.filename))
+	return fmt.Sprintf("%s[%s]%s", justFile, k.section, k.key)
 }
