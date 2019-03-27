@@ -58,6 +58,8 @@ func iniSection(inf *ini.File, cfg loc.CFG) (string, sil.SIL) {
 
 	s := sil.Make("CFG", loc.CFG{})
 
+	s.Header.F902 = "000002"
+
 	if result == "ALL" {
 		for _, sec := range sections[1:] {
 			s.View.Data = append(s.View.Data, singleSection(sec, cfg, inf)...)
